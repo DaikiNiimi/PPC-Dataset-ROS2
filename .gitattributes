@@ -1,0 +1,15 @@
+# Text files use LF on every platform
+* text=auto eol=lf
+
+# ROS 2 bag binary files
+*.db3 binary
+*.db3-shm binary
+*.db3-wal binary
+*.mcap binary
+
+# Other common binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.zip binary

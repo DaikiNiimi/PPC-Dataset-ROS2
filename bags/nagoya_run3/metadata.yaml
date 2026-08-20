@@ -1,0 +1,154 @@
+rosbag2_bagfile_information:
+  version: 9
+  storage_identifier: mcap
+  duration:
+    nanoseconds: 1040000000000
+  starting_time:
+    nanoseconds_since_epoch: 1722678600000000000
+  message_count: 120654
+  topics_with_message_count:
+    - topic_metadata:
+        name: /base/gnss/observation
+        type: gnss_ros_standardization/msg/GnssObservations
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 1
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 1041
+    - topic_metadata:
+        name: /gnss/ephemeris
+        type: gnss_ros_standardization/msg/GnssEphemerides
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 256
+            reliability: reliable
+            durability: transient_local
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 9
+    - topic_metadata:
+        name: /gnss/imu/data_raw
+        type: sensor_msgs/msg/Imu
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 1
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 104001
+    - topic_metadata:
+        name: /gnss/observation
+        type: gnss_ros_standardization/msg/GnssObservations
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 1
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 5201
+    - topic_metadata:
+        name: /gnss/reference/solution
+        type: gnss_ros_standardization/msg/GnssSolution
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 1
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 5201
+    - topic_metadata:
+        name: /gnss/reference/solution_odom
+        type: nav_msgs/msg/Odometry
+        serialization_format: cdr
+        offered_qos_profiles:
+          - history: keep_last
+            depth: 1
+            reliability: reliable
+            durability: volatile
+            deadline:
+              sec: 0
+              nsec: 0
+            lifespan:
+              sec: 0
+              nsec: 0
+            liveliness: system_default
+            liveliness_lease_duration:
+              sec: 0
+              nsec: 0
+            avoid_ros_namespace_conventions: false
+        type_description_hash: ""
+      message_count: 5201
+  compression_format: ""
+  compression_mode: ""
+  relative_file_paths:
+    - nagoya_run3_0.mcap
+  files:
+    - path: nagoya_run3_0.mcap
+      starting_time:
+        nanoseconds_since_epoch: 1722678600000000000
+      duration:
+        nanoseconds: 1040000000000
+      message_count: 241308
+  custom_data: ~
+  ros_distro: jazzy
