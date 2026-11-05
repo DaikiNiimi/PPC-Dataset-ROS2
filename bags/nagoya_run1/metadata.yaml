@@ -2,10 +2,10 @@ rosbag2_bagfile_information:
   version: 9
   storage_identifier: mcap
   duration:
-    nanoseconds: 1530000000000
+    nanoseconds: 1531000000000
   starting_time:
-    nanoseconds_since_epoch: 1722675180000000000
-  message_count: 177454
+    nanoseconds_since_epoch: 1722675179000000000
+  message_count: 177457
   topics_with_message_count:
     - topic_metadata:
         name: /base/gnss/observation
@@ -50,7 +50,7 @@ rosbag2_bagfile_information:
               nsec: 0
             avoid_ros_namespace_conventions: false
         type_description_hash: ""
-      message_count: 18
+      message_count: 21
     - topic_metadata:
         name: /gnss/imu/data_raw
         type: sensor_msgs/msg/Imu
@@ -146,9 +146,9 @@ rosbag2_bagfile_information:
   files:
     - path: nagoya_run1_0.mcap
       starting_time:
-        nanoseconds_since_epoch: 1722675180000000000
+        nanoseconds_since_epoch: 1722675179000000000
       duration:
-        nanoseconds: 1530000000000
-      message_count: 354908
+        nanoseconds: 1531000000000
+      message_count: 354914
   custom_data: ~
   ros_distro: jazzy
