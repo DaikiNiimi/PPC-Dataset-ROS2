@@ -24,27 +24,23 @@ GPST. Each bag includes `gnss_time_basis.yaml`; do not interpret the timestamps
 as UTC without a time-scale conversion. Source gaps are kept; missing epochs are
 not interpolated.
 
-IMU acceleration is in m/s²; angular velocity is converted from degrees/s to
-rad/s. The raw source axes are kept, labelled `imu_link`, with no lever-arm
-correction. The reference solution keeps the source LLH/ECEF position and ENU
-velocity. The reference Odometry uses the first reference position as the fixed
-ENU `map` origin, expresses attitude in that map, and expresses linear twist in
-`base_link`. The CSV attitude conversion uses roll/pitch and heading clockwise
-from North. This verifies the stated field conversion, not the physical
-mounting or calibration accuracy. The upstream documentation describes the
-Tokyo lever arm in two different ways; no positioning accuracy is certified
-here.
+IMU acceleration is in m/s², angular velocity in rad/s (converted from deg/s),
+in the source axes (`imu_link`), without lever-arm correction. The reference
+solution keeps the source LLH/ECEF position and ENU velocity. The reference
+Odometry uses the first reference position as the ENU `map` origin; attitude is in
+`map` (from roll, pitch and heading clockwise from North), linear twist in
+`base_link`.
 
 ## Runs
 
 | Run | First observation (GPST) | Duration | Messages | MCAP bytes |
 |---|---|---|---|---|
-| `nagoya_run1` | 2024-08-03 08:53:00 | 1530 s | 177,457 | 27,245,931 |
-| `nagoya_run2` | 2024-07-20 10:22:00 | 1890 s | 219,263 | 33,818,216 |
-| `nagoya_run3` | 2024-08-03 09:50:00 | 1040 s | 120,656 | 18,249,774 |
-| `tokyo_run1` | 2024-07-23 04:04:30 | 2390 s | 277,244 | 39,043,962 |
-| `tokyo_run2` | 2024-07-23 01:10:00 | 1830 s | 212,447 | 35,403,417 |
-| `tokyo_run3` | 2024-07-23 01:51:00 | 3060 s | 355,244 | 59,658,494 |
+| `nagoya_run1` | 2024-08-03 08:53:00 | 1530 s | 177,457 | 27,257,971 |
+| `nagoya_run2` | 2024-07-20 10:22:00 | 1890 s | 219,263 | 33,828,047 |
+| `nagoya_run3` | 2024-08-03 09:50:00 | 1040 s | 120,656 | 18,241,015 |
+| `tokyo_run1` | 2024-07-23 04:04:30 | 2390 s | 277,244 | 39,049,486 |
+| `tokyo_run2` | 2024-07-23 01:10:00 | 1830 s | 212,447 | 35,394,985 |
+| `tokyo_run3` | 2024-07-23 01:51:00 | 3060 s | 355,244 | 59,654,591 |
 
 `bags/<run>/` contains one MCAP file (lossless Zstandard chunk compression), the
 metadata and the time-basis sidecar. Each MCAP file is below 100 MB.
@@ -57,8 +53,9 @@ transmitted before the first observation epoch are published together **1 s
 before the first observation**, so that playback delivers them before the first
 epoch. Records transmitted after the last observation epoch are omitted.
 
-The topics carry legacy Kepler GPS/Galileo/QZSS/BeiDou ephemerides and GLONASS
-ephemerides: **8,256 records** across the six runs. The source files contain
+Each message also carries the ionosphere parameters of the `base.nav` header
+(GPS, Galileo, QZSS, BeiDou). The topics carry legacy Kepler GPS/Galileo/QZSS/BeiDou
+ephemerides and GLONASS ephemerides: **8,256 records** across the six runs. The source files contain
 20,712 records (a file shared by several runs is counted once for each run). Not
 published are the 5,698 SBAS records, which the message types cannot represent;
 records without an orbit, which receivers publish as "unhealthy, no orbit"; and
@@ -73,15 +70,12 @@ records transmitted after the last epoch.
   BeiDou C51–C63 are kept. P and L use absolute tolerance 1e-6; float32 D/CN0
   use `max(1e-6, abs(source) * 6e-8)`. Identifiers, flags and counts match
   exactly.
-- Blank or zero RINEX measurement fields mean missing data (RINEX 3.04). The
-  converter keeps them as zero, so a zero in these bags must not be treated as a
-  measured value.
+- A zero measurement value in these bags comes from a zero (missing) field in the
+  source RINEX files; treat it as missing.
 - Navigation: every published record matched the fields of its source record.
 - IMU and reference: every CSV row matched its message (header time within 1 µs).
 - Playback: each compressed bag was played into a new recorder; all topic
   counts and ordered payload hashes matched.
-
-These checks do not certify receiver binary formats or physical timing.
 
 ## Replay
 
@@ -93,9 +87,7 @@ ros2 bag play bags/nagoya_run1 --rate 1
 ```
 
 Use reliable subscriptions; the navigation topic uses transient-local
-durability. Start subscribers before playback if every message must be
-received. Temporal filters and estimators must reset or restart when looping or
-seeking backwards; the bags do not contain a session-reset event.
+durability. Start subscribers before playback if every message must be received.
 
 ## Reproduce
 
