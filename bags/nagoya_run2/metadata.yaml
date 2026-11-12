@@ -13,7 +13,7 @@ rosbag2_bagfile_information:
         serialization_format: cdr
         offered_qos_profiles:
           - history: keep_last
-            depth: 1
+            depth: 2000
             reliability: reliable
             durability: volatile
             deadline:
@@ -57,7 +57,7 @@ rosbag2_bagfile_information:
         serialization_format: cdr
         offered_qos_profiles:
           - history: keep_last
-            depth: 1
+            depth: 20000
             reliability: reliable
             durability: volatile
             deadline:
@@ -79,7 +79,7 @@ rosbag2_bagfile_information:
         serialization_format: cdr
         offered_qos_profiles:
           - history: keep_last
-            depth: 1
+            depth: 2000
             reliability: reliable
             durability: volatile
             deadline:
@@ -101,7 +101,7 @@ rosbag2_bagfile_information:
         serialization_format: cdr
         offered_qos_profiles:
           - history: keep_last
-            depth: 1
+            depth: 2000
             reliability: reliable
             durability: volatile
             deadline:
@@ -123,7 +123,7 @@ rosbag2_bagfile_information:
         serialization_format: cdr
         offered_qos_profiles:
           - history: keep_last
-            depth: 1
+            depth: 2000
             reliability: reliable
             durability: volatile
             deadline:

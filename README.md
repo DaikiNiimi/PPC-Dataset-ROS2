@@ -26,8 +26,10 @@ not interpolated.
 
 IMU acceleration is in m/s², angular velocity in rad/s (converted from deg/s),
 in the source axes (`imu_link`), without lever-arm correction. The reference
-solution keeps the source LLH/ECEF position and ENU velocity. The reference
-Odometry uses the first reference position as the ENU `map` origin; attitude is in
+solution keeps the source LLH/ECEF position and ENU velocity; its `pos_enu` is
+relative to the first reference position, recorded in `pos_enu_org_ecef`.
+Values the source does not provide (`age_diff`, DOP and covariances) are NaN. The
+reference Odometry uses the same origin as the ENU `map` frame; attitude is in
 `map` (from roll, pitch and heading clockwise from North), linear twist in
 `base_link`.
 
@@ -35,12 +37,12 @@ Odometry uses the first reference position as the ENU `map` origin; attitude is 
 
 | Run | First observation (GPST) | Duration | Messages | MCAP bytes |
 |---|---|---|---|---|
-| `nagoya_run1` | 2024-08-03 08:53:00 | 1530 s | 177,457 | 27,257,971 |
-| `nagoya_run2` | 2024-07-20 10:22:00 | 1890 s | 219,263 | 33,828,047 |
-| `nagoya_run3` | 2024-08-03 09:50:00 | 1040 s | 120,656 | 18,241,015 |
-| `tokyo_run1` | 2024-07-23 04:04:30 | 2390 s | 277,244 | 39,049,486 |
-| `tokyo_run2` | 2024-07-23 01:10:00 | 1830 s | 212,447 | 35,394,985 |
-| `tokyo_run3` | 2024-07-23 01:51:00 | 3060 s | 355,244 | 59,654,591 |
+| `nagoya_run1` | 2024-08-03 08:53:00 | 1530 s | 177,457 | 27,266,898 |
+| `nagoya_run2` | 2024-07-20 10:22:00 | 1890 s | 219,263 | 33,834,240 |
+| `nagoya_run3` | 2024-08-03 09:50:00 | 1040 s | 120,656 | 18,247,638 |
+| `tokyo_run1` | 2024-07-23 04:04:30 | 2390 s | 277,244 | 39,065,495 |
+| `tokyo_run2` | 2024-07-23 01:10:00 | 1830 s | 212,447 | 35,394,262 |
+| `tokyo_run3` | 2024-07-23 01:51:00 | 3060 s | 355,244 | 59,684,988 |
 
 `bags/<run>/` contains one MCAP file (lossless Zstandard chunk compression), the
 metadata and the time-basis sidecar. Each MCAP file is below 100 MB.
@@ -88,6 +90,8 @@ ros2 bag play bags/nagoya_run1 --rate 1
 
 Use reliable subscriptions; the navigation topic uses transient-local
 durability. Start subscribers before playback if every message must be received.
+The player offers the recorded history depth: 2000 for the observation and
+reference topics, 20000 for the IMU and 256 for the navigation topic.
 
 ## Reproduce
 
