@@ -44,6 +44,8 @@ reference Odometry uses the same origin as the ENU `map` frame; attitude is in
 | `tokyo_run2` | 2024-07-23 01:10:00 | 1830 s | 212,447 | 35,394,262 |
 | `tokyo_run3` | 2024-07-23 01:51:00 | 3060 s | 355,244 | 59,684,988 |
 
+![Reference trajectory of each run](fig/routes.png)
+
 `bags/<run>/` contains one MCAP file (lossless Zstandard chunk compression), the
 metadata and the time-basis sidecar. Each MCAP file is below 100 MB.
 
@@ -92,6 +94,95 @@ Use reliable subscriptions; the navigation topic uses transient-local
 durability. Start subscribers before playback if every message must be received.
 The player offers the recorded history depth: 2000 for the observation and
 reference topics, 20000 for the IMU and 256 for the navigation topic.
+
+## Baseline results
+
+`results/<run>_<method>.pos` are the solutions of `real_time_kinematic` (`rtk`),
+`gnss_fgo` and `gnss_imu_fgo` of gnss_ros_standardization v1.1.0, in RTKLIB
+format. Each bag was played once at `--rate 1`.
+
+| Item | Value |
+|---|---|
+| Parameters | `config/ppc/<city>_rtk.yaml`, `<city>_gnss_fgo.yaml`, `<city>_gnss_imu_fgo.yaml` |
+| Constellations | GPS, Galileo, BeiDou, QZSS |
+| Frequencies | L1, L2 |
+| Elevation mask | 15 deg |
+| SNR mask | 35 dB-Hz, rover and base |
+| Ambiguity resolution | fix and hold, ratio threshold 3.0 |
+| `gnss_imu_fgo` | NHC and ZUPT enabled; IMU-to-antenna lever arm (FLU, m) Tokyo `[0.31, 0.0, 0.55]`, Nagoya `[1.422, -0.171, 1.216]` |
+
+The Nagoya lever arm is not the value of the PPC-Dataset README,
+`(0.593, -0.670, -1.216)` in FRD; it refers to the antenna recorded in `rover.obs`.
+
+| Metric | Definition |
+|---|---|
+| Fix rate | FIX epochs / reference epochs |
+| Miss Fix rate | FIX epochs with a 3D error of 0.5 m or more / FIX epochs |
+| 3D <= 0.5 m | epochs with a 3D error of 0.5 m or less, any solution status / reference epochs |
+| 3D RMS | over the epochs that have a solution |
+
+The error is the distance between the solution and the reference position of the
+same epoch (time tags within 2 ms). Totals use summed epoch counts.
+
+| Run | Method | Fix rate % | Miss Fix rate % | 3D <= 0.5 m % | 3D RMS m |
+|---|---|---|---|---|---|
+| `tokyo_run1` | `rtk` | 19.84 | 2.36 | 20.99 | 31.75 |
+| `tokyo_run1` | `gnss_fgo` | 46.07 | 0.47 | 62.27 | 24.80 |
+| `tokyo_run1` | `gnss_imu_fgo` | 46.24 | 0.51 | 65.12 | 12.35 |
+| `tokyo_run2` | `rtk` | 59.91 | 0.42 | 63.45 | 9.87 |
+| `tokyo_run2` | `gnss_fgo` | 46.79 | 0.82 | 76.29 | 16.10 |
+| `tokyo_run2` | `gnss_imu_fgo` | 47.26 | 0.74 | 78.41 | 3.72 |
+| `tokyo_run3` | `rtk` | 71.81 | 0.29 | 76.50 | 5.97 |
+| `tokyo_run3` | `gnss_fgo` | 46.34 | 0.73 | 78.90 | 24.95 |
+| `tokyo_run3` | `gnss_imu_fgo` | 43.19 | 0.62 | 77.13 | 7.80 |
+| `nagoya_run1` | `rtk` | 67.25 | 8.07 | 63.19 | 15.42 |
+| `nagoya_run1` | `gnss_fgo` | 46.96 | 0.39 | 78.43 | 39.33 |
+| `nagoya_run1` | `gnss_imu_fgo` | 44.84 | 0.50 | 77.87 | 2.22 |
+| `nagoya_run2` | `rtk` | 63.01 | 16.02 | 53.43 | 10.63 |
+| `nagoya_run2` | `gnss_fgo` | 24.65 | 2.02 | 51.23 | 12.72 |
+| `nagoya_run2` | `gnss_imu_fgo` | 26.89 | 3.70 | 50.85 | 9.39 |
+| `nagoya_run3` | `rtk` | 56.10 | 3.05 | 60.70 | 4.84 |
+| `nagoya_run3` | `gnss_fgo` | 37.86 | 3.15 | 58.83 | 21.19 |
+| `nagoya_run3` | `gnss_imu_fgo` | 42.49 | 2.40 | 69.10 | 2.73 |
+| Tokyo | `rtk` | 51.76 | 0.59 | 55.00 | 19.28 |
+| Tokyo | `gnss_fgo` | 46.36 | 0.67 | 72.78 | 22.99 |
+| Tokyo | `gnss_imu_fgo` | 45.22 | 0.61 | 73.51 | 8.89 |
+| Nagoya | `rtk` | 62.85 | 10.40 | 58.48 | 11.58 |
+| Nagoya | `gnss_fgo` | 35.39 | 1.56 | 62.34 | 26.49 |
+| Nagoya | `gnss_imu_fgo` | 36.69 | 2.00 | 64.38 | 6.39 |
+| All | `rtk` | 55.97 | 4.77 | 56.32 | 16.77 |
+| All | `gnss_fgo` | 42.19 | 0.95 | 68.81 | 24.38 |
+| All | `gnss_imu_fgo` | 41.98 | 1.08 | 70.04 | 8.04 |
+
+![Cumulative distribution of the 3D error](fig/error_cdf.png)
+
+Share of the reference epochs within a 3D error. The legend gives the value at 0.5 m.
+
+![Result of every epoch of the Tokyo runs](fig/tracks_tokyo.png)
+
+![Result of every epoch of the Nagoya runs](fig/tracks_nagoya.png)
+
+Every reference epoch is drawn at its reference position.
+
+The table and the figures (Matplotlib) are the output of:
+
+```bash
+python3 tools/evaluate.py
+python3 tools/plot_results.py
+```
+
+To score another solution, record it, convert it and name it
+`results/<run>_<method>.pos`:
+
+```bash
+ros2 run gnss_ros_standardization gnss_fgo --ros-args \
+  --params-file /path/to/gnss_ros_standardization/config/ppc/tokyo_gnss_fgo.yaml &
+ros2 bag record -s mcap -o /path/to/solution-bag --topics /gnss/solution &
+ros2 bag play bags/tokyo_run1 --rate 1
+ros2 run gnss_ros_standardization rosbag_to_pos \
+  --bag /path/to/solution-bag --out results/tokyo_run1_gnss_fgo.pos
+python3 tools/evaluate.py --methods gnss_fgo
+```
 
 ## Reproduce
 
