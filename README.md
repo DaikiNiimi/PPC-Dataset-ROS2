@@ -98,8 +98,14 @@ reference topics, 20000 for the IMU and 256 for the navigation topic.
 ## Baseline results
 
 `results/<run>_<method>.pos` are the solutions of `real_time_kinematic` (`rtk`),
-`gnss_fgo` and `gnss_imu_fgo` of gnss_ros_standardization v1.1.0, in RTKLIB
+`gnss_fgo` and `gnss_imu_fgo` of gnss_ros_standardization v1.2.0, in RTKLIB
 format. Each bag was played once at `--rate 1`.
+
+`rnx2rtkp` is RTKLIB's post-processing program, built from the unmodified RTKLIB
+submodule of gnss_ros_standardization and run on the RINEX files of the PPC-Dataset
+with `tools/rnx2rtkp_<city>.conf`, the settings of `config/ppc/<city>_rtk.yaml`. It
+pairs each rover epoch with the base epoch nearest in time; `rtk` uses the latest
+base epoch received.
 
 | Item | Value |
 |---|---|
@@ -127,32 +133,41 @@ same epoch (time tags within 2 ms). Totals use summed epoch counts.
 | Run | Method | Fix rate % | Miss Fix rate % | 3D <= 0.5 m % | 3D RMS m |
 |---|---|---|---|---|---|
 | `tokyo_run1` | `rtk` | 19.84 | 2.36 | 20.99 | 31.75 |
-| `tokyo_run1` | `gnss_fgo` | 46.07 | 0.47 | 62.27 | 24.80 |
-| `tokyo_run1` | `gnss_imu_fgo` | 46.24 | 0.51 | 65.12 | 12.35 |
+| `tokyo_run1` | `rnx2rtkp` | 18.96 | 1.85 | 19.79 | 31.86 |
+| `tokyo_run1` | `gnss_fgo` | 53.95 | 0.12 | 59.47 | 21.70 |
+| `tokyo_run1` | `gnss_imu_fgo` | 54.10 | 0.53 | 67.60 | 1.74 |
 | `tokyo_run2` | `rtk` | 59.91 | 0.42 | 63.45 | 9.87 |
-| `tokyo_run2` | `gnss_fgo` | 46.79 | 0.82 | 76.29 | 16.10 |
-| `tokyo_run2` | `gnss_imu_fgo` | 47.26 | 0.74 | 78.41 | 3.72 |
+| `tokyo_run2` | `rnx2rtkp` | 60.62 | 0.49 | 62.98 | 9.91 |
+| `tokyo_run2` | `gnss_fgo` | 72.63 | 0.50 | 78.40 | 10.56 |
+| `tokyo_run2` | `gnss_imu_fgo` | 71.45 | 0.46 | 80.70 | 1.72 |
 | `tokyo_run3` | `rtk` | 71.81 | 0.29 | 76.50 | 5.97 |
-| `tokyo_run3` | `gnss_fgo` | 46.34 | 0.73 | 78.90 | 24.95 |
-| `tokyo_run3` | `gnss_imu_fgo` | 43.19 | 0.62 | 77.13 | 7.80 |
+| `tokyo_run3` | `rnx2rtkp` | 71.50 | 4.62 | 73.69 | 6.66 |
+| `tokyo_run3` | `gnss_fgo` | 69.60 | 0.49 | 76.67 | 24.61 |
+| `tokyo_run3` | `gnss_imu_fgo` | 65.98 | 0.22 | 82.38 | 2.07 |
 | `nagoya_run1` | `rtk` | 67.25 | 8.07 | 63.19 | 15.42 |
-| `nagoya_run1` | `gnss_fgo` | 46.96 | 0.39 | 78.43 | 39.33 |
-| `nagoya_run1` | `gnss_imu_fgo` | 44.84 | 0.50 | 77.87 | 2.22 |
+| `nagoya_run1` | `rnx2rtkp` | 62.21 | 8.49 | 62.59 | 15.24 |
+| `nagoya_run1` | `gnss_fgo` | 72.10 | 0.07 | 79.55 | 30.86 |
+| `nagoya_run1` | `gnss_imu_fgo` | 69.21 | 0.06 | 79.52 | 2.06 |
 | `nagoya_run2` | `rtk` | 63.01 | 16.02 | 53.43 | 10.63 |
-| `nagoya_run2` | `gnss_fgo` | 24.65 | 2.02 | 51.23 | 12.72 |
-| `nagoya_run2` | `gnss_imu_fgo` | 26.89 | 3.70 | 50.85 | 9.39 |
+| `nagoya_run2` | `rnx2rtkp` | 62.96 | 15.78 | 53.54 | 10.56 |
+| `nagoya_run2` | `gnss_fgo` | 42.57 | 1.86 | 60.11 | 7.36 |
+| `nagoya_run2` | `gnss_imu_fgo` | 33.21 | 2.20 | 49.61 | 3.35 |
 | `nagoya_run3` | `rtk` | 56.10 | 3.05 | 60.70 | 4.84 |
-| `nagoya_run3` | `gnss_fgo` | 37.86 | 3.15 | 58.83 | 21.19 |
-| `nagoya_run3` | `gnss_imu_fgo` | 42.49 | 2.40 | 69.10 | 2.73 |
+| `nagoya_run3` | `rnx2rtkp` | 54.35 | 6.90 | 56.53 | 4.78 |
+| `nagoya_run3` | `gnss_fgo` | 42.51 | 1.36 | 55.20 | 10.63 |
+| `nagoya_run3` | `gnss_imu_fgo` | 53.62 | 0.75 | 79.75 | 1.01 |
 | Tokyo | `rtk` | 51.76 | 0.59 | 55.00 | 19.28 |
-| Tokyo | `gnss_fgo` | 46.36 | 0.67 | 72.78 | 22.99 |
-| Tokyo | `gnss_imu_fgo` | 45.22 | 0.61 | 73.51 | 8.89 |
+| Tokyo | `rnx2rtkp` | 51.51 | 3.06 | 53.30 | 19.44 |
+| Tokyo | `gnss_fgo` | 65.23 | 0.39 | 71.46 | 20.91 |
+| Tokyo | `gnss_imu_fgo` | 63.45 | 0.37 | 77.11 | 1.88 |
 | Nagoya | `rtk` | 62.85 | 10.40 | 58.48 | 11.58 |
-| Nagoya | `gnss_fgo` | 35.39 | 1.56 | 62.34 | 26.49 |
-| Nagoya | `gnss_imu_fgo` | 36.69 | 2.00 | 64.38 | 6.39 |
+| Nagoya | `rnx2rtkp` | 60.70 | 11.36 | 57.34 | 11.47 |
+| Nagoya | `gnss_fgo` | 52.68 | 0.93 | 65.63 | 19.36 |
+| Nagoya | `gnss_imu_fgo` | 50.32 | 0.83 | 66.90 | 2.54 |
 | All | `rtk` | 55.97 | 4.77 | 56.32 | 16.77 |
-| All | `gnss_fgo` | 42.19 | 0.95 | 68.81 | 24.38 |
-| All | `gnss_imu_fgo` | 41.98 | 1.08 | 70.04 | 8.04 |
+| All | `rnx2rtkp` | 55.00 | 6.54 | 54.84 | 16.86 |
+| All | `gnss_fgo` | 60.46 | 0.57 | 69.24 | 20.33 |
+| All | `gnss_imu_fgo` | 58.46 | 0.52 | 73.23 | 2.16 |
 
 ![Cumulative distribution of the 3D error](fig/error_cdf.png)
 

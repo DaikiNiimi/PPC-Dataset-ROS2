@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Score RTKLIB .pos solutions against the reference solution of the bags.
 
-    python3 tools/evaluate.py [--bags bags] [--results results] [--methods rtk,gnss_fgo,gnss_imu_fgo]
+    python3 tools/evaluate.py [--bags bags] [--results results] [--methods rtk,rnx2rtkp,gnss_fgo,gnss_imu_fgo]
 
 Solutions are read from <results>/<run>_<method>.pos (latitude/longitude/height,
 GPST), the reference from /gnss/reference/solution of <bags>/<run>. An epoch is
@@ -97,7 +97,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--bags', default=os.path.join(here, 'bags'))
     ap.add_argument('--results', default=os.path.join(here, 'results'))
-    ap.add_argument('--methods', default='rtk,gnss_fgo,gnss_imu_fgo')
+    ap.add_argument('--methods', default='rtk,rnx2rtkp,gnss_fgo,gnss_imu_fgo')
     args = ap.parse_args()
     methods = args.methods.split(',')
 
